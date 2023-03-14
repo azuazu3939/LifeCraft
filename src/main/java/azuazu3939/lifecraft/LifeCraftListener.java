@@ -2,6 +2,7 @@ package azuazu3939.lifecraft;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -11,7 +12,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class LifeCraftListener implements Listener {
+
+    private final List<ItemStack> list = new ArrayList<>();
+    private final Map<Player, List<ItemStack>> map = new HashMap<>();
 
     @EventHandler
     public void onClick(@NotNull InventoryClickEvent event) {
@@ -47,6 +56,20 @@ public class LifeCraftListener implements Listener {
                 } else if (item2.isSimilar(itemStack2)) {
                     set(item2, event.getInventory());
                 }
+            } else if (item2 != null && item2.hasItemMeta() &&
+                    item2.getType().equals(Material.WHITE_STAINED_GLASS_PANE) &&
+                    item2.getItemMeta() != null && item2.getItemMeta().hasCustomModelData() && item2.getItemMeta().getCustomModelData() == 1) {
+
+                new CreateInventory().step2((Player) event.getWhoClicked());
+                for (ItemStack setItem: event.getInventory().getStorageContents()) {
+
+                    if (setItem.getType().equals(Material.DIAMOND_BLOCK) ||
+                            setItem.getType().equals(Material.IRON_BLOCK) ||
+                            setItem.getType().equals(Material.GOLD_BLOCK)) {
+                        list.add(setItem);
+                        map.put((Player) event.getWhoClicked(), list);
+                    }
+                }
             }
         }
     }
@@ -71,6 +94,15 @@ public class LifeCraftListener implements Listener {
                         item.getType().equals(Material.GOLD_BLOCK)) {
                     event.getPlayer().getInventory().addItem(item);
                 }
+            }
+
+            if (!map.isEmpty() && map.containsKey((Player) event.getPlayer())) {
+
+                for (ItemStack item: map.get((Player) event.getPlayer())) {
+                    event.getPlayer().getInventory().addItem(item);
+                }
+                map.remove((Player) event.getPlayer());
+                list.clear();
             }
         }
     }

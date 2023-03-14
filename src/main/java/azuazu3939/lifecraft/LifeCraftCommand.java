@@ -26,7 +26,7 @@ public class LifeCraftCommand implements CommandExecutor, TabExecutor {
                 }
 
                 if (args[0].equalsIgnoreCase("open")) {
-                    new Step1Inventory().step1(player);
+                    new CreateInventory().step1(player);
                     player.sendMessage(ChatColor.GREEN + "LifeCraftメニューを開きました。");
                 }
             } else {
