@@ -1,0 +1,19 @@
+name: LifeCraft
+version: '${project.version}'
+main: azuazu3939.lifecraft.LifeCraft
+api-version: 1.15
+
+commands:
+  LifeCraft:
+    permission: LifeCraft.Command.LifeCraft
+    description: "LifeCraftのコマンドです。"
+
+permissions:
+  LifeCraft.*:
+    children:
+      LifeCraft.Command.*: true
+  LifeCraft.Command.*:
+    children:
+      LifeCraft.Command.LifeCraft: true
+  LifeCraft.Command.LifeCraft:
+    default: op
