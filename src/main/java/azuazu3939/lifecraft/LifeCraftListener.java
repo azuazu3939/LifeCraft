@@ -2,6 +2,7 @@ package azuazu3939.lifecraft;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +11,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -19,8 +21,8 @@ import java.util.Map;
 
 public class LifeCraftListener implements Listener {
 
-    private final List<ItemStack> list = new ArrayList<>();
-    private final Map<Player, List<ItemStack>> map = new HashMap<>();
+    private List<ItemStack> list;
+    private Map<Player, List<ItemStack>> map;
 
     @EventHandler
     public void onClick(@NotNull InventoryClickEvent event) {
@@ -34,6 +36,32 @@ public class LifeCraftListener implements Listener {
             ItemStack itemStack = MythicMobs.inst().getItemManager().getItemStack("compressed_diamond_block");
             ItemStack itemStack1 = MythicMobs.inst().getItemManager().getItemStack("Compressed_iron_block");
             ItemStack itemStack2 = MythicMobs.inst().getItemManager().getItemStack("Compressed_gold_block");
+
+
+            if (item2 != null && item2.hasItemMeta() &&
+                    item2.getType().equals(Material.WHITE_STAINED_GLASS_PANE) &&
+                    item2.getItemMeta() != null && item2.getItemMeta().hasCustomModelData() && item2.getItemMeta().getCustomModelData() == 1) {
+
+                if (event.getClickedInventory() != null && itemStack != null && itemStack1 != null && itemStack2 != null &&
+                        (event.getClickedInventory().contains(itemStack) || event.getClickedInventory().contains(itemStack1) || event.getClickedInventory().contains(itemStack2))) {
+
+                    list = new ArrayList<>();
+                    map = new HashMap<>();
+                    for (ItemStack setItem : event.getInventory().getStorageContents()) {
+
+                        if (setItem == null) continue;
+                        if (setItem.getType().isAir()) continue;
+                        if (setItem.getType().equals(Material.DIAMOND_BLOCK) ||
+                                setItem.getType().equals(Material.IRON_BLOCK) ||
+                                setItem.getType().equals(Material.GOLD_BLOCK)) {
+                            list.add(setItem);
+                            map.put((Player) event.getWhoClicked(), list);
+                        }
+                    }
+                    event.getWhoClicked().getPersistentDataContainer().set(new NamespacedKey(LifeCraft.inst(), "open"), PersistentDataType.INTEGER, 1);
+                    new CreateInventory().step2((Player) event.getWhoClicked());
+                }
+            }
 
             if (item != null && item.hasItemMeta() && itemStack != null && itemStack1 != null && itemStack2 != null) {
                 if (item.isSimilar(itemStack)) {
@@ -56,20 +84,6 @@ public class LifeCraftListener implements Listener {
                 } else if (item2.isSimilar(itemStack2)) {
                     set(item2, event.getInventory());
                 }
-            } else if (item2 != null && item2.hasItemMeta() &&
-                    item2.getType().equals(Material.WHITE_STAINED_GLASS_PANE) &&
-                    item2.getItemMeta() != null && item2.getItemMeta().hasCustomModelData() && item2.getItemMeta().getCustomModelData() == 1) {
-
-                new CreateInventory().step2((Player) event.getWhoClicked());
-                for (ItemStack setItem: event.getInventory().getStorageContents()) {
-
-                    if (setItem.getType().equals(Material.DIAMOND_BLOCK) ||
-                            setItem.getType().equals(Material.IRON_BLOCK) ||
-                            setItem.getType().equals(Material.GOLD_BLOCK)) {
-                        list.add(setItem);
-                        map.put((Player) event.getWhoClicked(), list);
-                    }
-                }
             }
         }
     }
@@ -87,8 +101,14 @@ public class LifeCraftListener implements Listener {
 
         if (event.getInventory().getHolder() instanceof LifeCraftHolder) {
 
-            for (ItemStack item: event.getInventory().getStorageContents()) {
+            if (event.getPlayer().getPersistentDataContainer().has(new NamespacedKey(LifeCraft.inst(), "open"), PersistentDataType.INTEGER)) {
+                event.getPlayer().getPersistentDataContainer().remove(new NamespacedKey(LifeCraft.inst(), "open"));
+                return;
+            }
+            for (ItemStack item: event.getInventory().getContents()) {
 
+                if (item == null) continue;
+                if (item.getType().isAir()) continue;
                 if (item.getType().equals(Material.DIAMOND_BLOCK) ||
                         item.getType().equals(Material.IRON_BLOCK) ||
                         item.getType().equals(Material.GOLD_BLOCK)) {
