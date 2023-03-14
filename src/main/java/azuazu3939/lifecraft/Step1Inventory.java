@@ -9,7 +9,7 @@ public class Step1Inventory {
 
     public void step1(Player player) {
 
-        Inventory inv = Bukkit.createInventory(new LifeCraftHolder(), 27, ChatColor.translateAlternateColorCodes('&', "&b&l圧縮ダイヤ&f,&7&l圧縮鉄&f,&6&l圧縮金&fのブロックのみ可能。"));
+        Inventory inv = Bukkit.createInventory(new LifeCraftHolder(), 27, ChatColor.translateAlternateColorCodes('&', "&b&l圧縮ダイヤ&f,&7&l圧縮鉄&f,&6&l圧縮金&fのブロックを入れる。"));
 
         for (int i = 0; i <= 9; i++) {inv.setItem(i, new CreateItem().getBackPane());}
         for (int i = 17; i <= 25; i++) {inv.setItem(i, new CreateItem().getBackPane());}
