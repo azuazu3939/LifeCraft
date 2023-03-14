@@ -17,16 +17,10 @@ public class LifeCraftListener implements Listener {
         if (event.getInventory().getHolder() instanceof LifeCraftHolder) {
 
             ItemStack item = event.getCursor();
-            if (event.getCurrentItem() != null || item == null || !item.hasItemMeta()) {
-                event.setCancelled(true);
-                return;
-            }
+            if (event.getCurrentItem() != null || item == null || !item.hasItemMeta()) return;
 
             ItemMeta meta = item.getItemMeta();
-            if (meta == null) {
-                event.setCancelled(true);
-                return;
-            }
+            if (meta == null) return;
 
             ItemStack itemStack = MythicMobs.inst().getItemManager().getItemStack("compressed_diamond_block");
             ItemStack itemStack1 = MythicMobs.inst().getItemManager().getItemStack("Compressed_iron_block");
@@ -44,7 +38,9 @@ public class LifeCraftListener implements Listener {
                 item.setAmount(item.getAmount() - 1);
                 new Utils().setItem(item, null);
 
-            } else event.setCancelled(true);
+            }
+
+            event.setCancelled(true);
         }
     }
 
