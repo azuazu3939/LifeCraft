@@ -37,19 +37,4 @@ public class Utils {
         }
         return null;
     }
-
-    public void setItem(ItemStack setItem, ItemStack replacedItem) {
-
-        if (setItem == null || !setItem.hasItemMeta()) {
-            replacedItem.setType(Material.AIR);
-        } else {
-
-            ItemMeta meta = setItem.getItemMeta();
-            Material mate = setItem.getType();
-            if (meta != null) {
-                replacedItem.setType(mate);
-                replacedItem.setItemMeta(meta);
-            }
-        }
-    }
 }

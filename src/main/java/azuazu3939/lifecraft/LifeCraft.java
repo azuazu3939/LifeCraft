@@ -17,6 +17,7 @@ public final class LifeCraft extends JavaPlugin {
 
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new LifeCraftListener(), this);
+        pm.registerEvents(new CraftListener(), this);
 
     }
 

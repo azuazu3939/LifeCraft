@@ -21,8 +21,8 @@ import java.util.Map;
 
 public class LifeCraftListener implements Listener {
 
-    private List<ItemStack> list;
-    private Map<Player, List<ItemStack>> map;
+    static List<ItemStack> list;
+    static Map<Player, List<ItemStack>> map;
 
     @EventHandler
     public void onClick(@NotNull InventoryClickEvent event) {
@@ -38,6 +38,7 @@ public class LifeCraftListener implements Listener {
             ItemStack itemStack2 = MythicMobs.inst().getItemManager().getItemStack("Compressed_gold_block");
 
 
+            //次のInv以降処理
             if (item2 != null && item2.hasItemMeta() &&
                     item2.getType().equals(Material.WHITE_STAINED_GLASS_PANE) &&
                     item2.getItemMeta() != null && item2.getItemMeta().hasCustomModelData() && item2.getItemMeta().getCustomModelData() == 1) {
@@ -63,6 +64,7 @@ public class LifeCraftListener implements Listener {
                 }
             }
 
+            //itemSet処理1
             if (item != null && item.hasItemMeta() && itemStack != null && itemStack1 != null && itemStack2 != null) {
                 if (item.isSimilar(itemStack)) {
                     set(item, event.getInventory());
@@ -74,6 +76,7 @@ public class LifeCraftListener implements Listener {
                     set(item, event.getInventory());
                 }
 
+                //itemSet処理2
             } else if (item2 != null && item2.hasItemMeta() && itemStack != null && itemStack1 != null && itemStack2 != null) {
                 if (item2.isSimilar(itemStack)) {
                     set(item2, event.getInventory());
